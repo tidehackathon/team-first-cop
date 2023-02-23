@@ -1,25 +1,25 @@
 # Docker
 
-Розроблений додаток доставляться з використанням [Docker](https://www.docker.com/) REST-API технологі: Дані, які необхідно промарувати подаються у вигляді запиту до АРІ, яке повертає результат маркування в залежності від задачі. Всього імплементовано три контейнера для таких задач:
-- Розпізнавання емоційного забарвлення - *модуль DET_EMOTION_MODEL*
-- Розпізнавання потенційного контексту повідомлення - *модуль DET_TOPICS_MODEL*
-- Оцінка ступені "специфічності" повідомлення від 0 до 1 - *модуль DET_APPROP_MODEL*
+The developed application will be delivered using [docker] (https://www.docker.com/) REST -API Technologies: data that need to be marked in the form of a request to the ari, which returns the marking result depending on the task. Three containers for the following tasks are implemented in total:
+- Recognition of emotional color - *module Det_emotion_model *
+- recognition of the potential context of the message - *DET_TOPICS_Model module *
+- Estimation of the degree of "specificity" message from 0 to 1 - *module DET_Approp_model *
 
-## Перший запуск
+## First launch
 
-Для запуску застосунків для початку необхідно виконати в консолі срипт-білдер для створення Docker image для master(приймає АРІ запити) та workers(обробляють повідомлення). Оскільки при першому запуску будуть завантажені усі використовувані моделі, а також бібліотеки для середовища, то виконання файлу може становити близько 10-15 хвилин.
+To start the applications, you must first make a Srip Bilder in the Docker Image Console for Master (accepts ARI inquiries) and workrs. Since all the models used, as well as libraries for the environment, the file will be loaded at the first start, the file can be about 10-15 minutes.
 
 ```
-build_container.bat
+build_container.sh
 ```
 
-Даний скрипт використовує процесор як обчислювальну одиницю та оперативну пам'ять для зберігання моделей, однак ці налаштування можна змінювати. В якості демонстраційного прикладу було відключено дві моделі з метою зменшення навантаження на систему. 
+This script uses the processor as a computing unit and RAM to store models, but these settings can be changed. Two models were disconnected as a demonstration example to reduce the load on the system.
 
-## Використання
+## Use
 
-Після того як скрипт відпрацює буде запущено два docker image, один для основного(master) та другий для обробника(worker). Усі запити надсилаються на master контейнер. За замовчуванням стандартна адреса доступу - 127.0.0.1:8228 Тому для перевірки правильності встановення можна перейти за адресою [http://localhost:8228/](http://localhost:8228/) і подививтись на результат, який прийде: при успішному запуску повертається "Hello World" повідомлення. Для використання предіктору за назначенням, необхідно використовувати обробник http://localhost:8228/label
+After the script has been working out two docker Image, one for the main (Master) and the second for the handler. All requests are sent to the Master Container. By default, the standard access address - 127.0.0.1.1:8228 Therefore, to check the correctness of installation can be go Launch returns "Hello World" message. To use the pre -defined precursor, it is necessary to use the HTTP: // Lcalhost: 8228/Label
 
-Формат запиту до серверу має наступний формат JSON:
+The server request format has the following JSON format:
 ```
 {
     "message": ["msg1", "msg2", ...],
@@ -28,9 +28,9 @@ build_container.bat
 }
 ```
 
-Параметр message являє собою список повідомлень у текстовому форматі, які необхідно класифікувати; source_lang - мова джерела, за замовчуванням null, оскільки практичної доцільності набагне в майбутньому; env - змінна, яка відповідає за назву обробника повідомлень, встановлюється відповідно до трьох значень, наведених вище.
+The MESSAGE parameter is a list of messages in text format that needs to be classified; Source_lang - the language of the source, by default NULL, since the practical feasibility will be acquired in the future; ENV is a variable that is responsible for the name of the message handler, is set in accordance with the three values above.
 
-Результатом такого POST запиту, не залежно від задачі та мови, буде результат в наступному форматі:
+The result of such a post request, regardless of the problem and language, will be the result in the following format:
 
 ```
 {
@@ -43,9 +43,9 @@ build_container.bat
 }
 ```
 
-Відповідно тут додаються такі нові дані: labels - мітки емоцій в порядку відповідному вхідних повідмоленням; logits - масив масивів чисел з плаваючою точкою, які характеризують впевненність мережі у відповіді; calculation_time - час, затрачений на обробку вхідних повідомлень воркером.
+Accordingly, the following new data are added here: labels - labels of emotions in the order of appropriate input; Logits - an array of arrays of numbers with a floating point that characterize the network confidence in response; Calculation_time - the time spent on the processing of incoming messages with a worcker.
 
-Приклади запитів для розпізнавання емоційного забарвлення наведено нижче:
+Examples of requests to recognize emotional coloring are given below:
 
 ```
 from numpy.lib.utils import source
@@ -55,7 +55,7 @@ from requests.utils import quote
 
 url = 'http://localhost:8228'
 #####################################
-# Повідомлення
+# Messages
 messages = [
     'Я люблю дарить улыбку, ', 
     "на Чаки очень похож ))))",
@@ -63,15 +63,15 @@ messages = [
     "Ты не бабник, нет - не льсти себе. ты - курицалюб",
     "пьяная рожа"
 ]
-# Мова повідомлень, не обов'язковий параметр
+# Message language is not required
 source_lang='ru'
-# Вибір моделі, що повинна використовуватись для задачі, 
-# за замовчуванням 'DET_EMOTION_MODEL'
+# Choosing a model that should be used for a task,
+# default 'Det_emotion_model'
 env_names = ['DET_EMOTION_MODEL', 'DET_TOPICS_MODEL', 'DET_APPROP_MODEL']
 env = env_names[1]
 #####################################
 # r = requests.post(url+"/set_ip", json={'env': env, "ip":'http://172.19.0.2:8011'})
-# Варіант 1: GET запити для кожного окремого повідомлення
+# Option 1: Get requests for each individual message
 for text in messages:
     r = requests.get(f'{url}/label?message={quote(text)}&source_lang={source_lang}&env={env}')
     translated_text = r.json()
@@ -80,7 +80,7 @@ for text in messages:
     print("\n")
 
 
-# Варіант 2: POST запит який відсилає масив повідомлень
+# Option 2: Post request that sends an array of messages
 print("\nPost request that sends all sentences at once")
 r = requests.post(url+"/label", json={'message': messages, "source_lang":source_lang, 'env': env})
 response_data = r.json()
@@ -91,7 +91,7 @@ response_data = r.json()
 pprint.pprint(response_data, sort_dicts=False)
 ```
 
-В результаті виконання було отримано, для GET запиту по одному повідомленню:
+As a result of the execution was received, for the Get request one message:
 
 ```
 Я люблю дарить улыбку,  
@@ -139,7 +139,7 @@ pprint.pprint(response_data, sort_dicts=False)
  'calculation_time': 0.3383290767669678}
 ```
 
-Для POST запиту з масивом повідомлень:
+To post request with an array of messages:
 
 ```
 Post request that sends all sentences at once
@@ -159,4 +159,4 @@ Post request that sends all sentences at once
 ```
 
 
-Усі моделі монтуються в докер динамічно, для запобігання збільшення розміру контейнеру. Також усі кешовані файли зберігаються в папці `/cache/`, а отже за необхідності їх можна буде легко скопіювати з докеру у випадку аналізу виконання та інших задач.
+All models are mounted in doc dynamically to prevent the size of the container. Also, all cached files are stored in the `/cache/` folder, so they can be easily copied from the docker if necessary in the event of performance and other tasks.
