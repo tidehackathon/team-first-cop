@@ -12,17 +12,17 @@ MongoEngine is a Python library that acts as an Object Document Mapper with Mong
 
 # The main functionality
 
-1) Pariser of news resources (news sites, telegram channels, tweeter, radish, etc.)-is a modular system, each new parser is connected as a module.
+I) Pariser of news resources (news sites, telegram channels, tweeter, radish, etc.)-is a modular system, each new parser is connected as a module.
 
-2) administrator panel \ operator
+II) administrator panel \ operator
   Source management: adding \ removal,
   Analytics:
-  Visualization of similar texts (indicating the coincidence in %)
-  Visualization of the connection of sources / channels (who reposted whom (based on the time of fasting), which was changed (what is the difference) ...
-  Search by Entity and text
-  Classify sources
+    Visualization of similar texts (indicating the coincidence in %)
+    Visualization of the connection of sources / channels (who reposted whom (based on the time of fasting), which was changed (what is the difference) ...
+    Search by Entity and text
+    Classify sources
 
-3) Analysts tool (neurons and their symbiosis):
+II) Analysts tool (neurons and their symbiosis):
   1. Language recognition (definition of which language in the news)
   2. Determination of entities in the news (who \ what)
   3. Definition of the context in relation to the essence (which does, as characterized, etc.)
