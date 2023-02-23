@@ -9,6 +9,31 @@ Tweepy is an open source Python package that gives you a very convenient way to 
 
 MongoEngine is a Python library that acts as an Object Document Mapper with MongoDB, a NOSQL database. It is similar to SQLAlchemy, which is the Object Relation Mapper (ORM) for SQL based databases.
 
+• 1) Pariser of news resources (news sites, telegram channels, tweeter, radish, etc.)-is a modular system, each new parser is connected as a module.
+
+• 2) administrator panel \ operator
+• Source management: adding \ removal,
+• Analytics:
+• Visualization of similar texts (indicating the coincidence in %)
+• Visualization of the connection of sources / channels (who reposted whom (based on the time of fasting), which was changed (what is the difference) ...
+• Search by Entity and text
+• Classify sources
+
+• 3) Analysts tool (neurons and their symbiosis):
+• 1. Language recognition (definition of which language in the news)
+• 2. Determination of entities in the news (who \ what)
+• 3. Definition of the context in relation to the essence (which does, as characterized, etc.)
+• 4. Search for the source of news
+• 5. Based on the identification of “who” and “what” is being searched in conditionally “trusting” sources (sources with the level of trust of analysts affected by analysts / operator) in order to determine whether there is a contradiction between the information in the dashed news and in the official (“trusted” ) the source
+• 6. Construction of ratings of sources of information (channels) and determining the level of their “fake” - a tendency to publish fakes, the relevance of the source, political color, reputation,
+• 7. Next-stp: Analysis of the image in the news in order to search for the original, possible changes in the picture ....
+• 8. Automatic translation of news to other languages and a connection between chains
+• 9. Definition and search for a template in the text
+• 10. Correspondence of the header to the contents
+• Emotional color recognition - Det_emotion_model module
+• Context recognition - module DET_TOPICS_MODEL
+• Assessment of the degree of uniqueness from 0 to 1 - module Det_Approp_Model
+
 ### requirements.txt
 ```
 psycopg2-binary==2.9.5
