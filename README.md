@@ -1,4 +1,5 @@
-# SeeTweet Analizer
+# T.S.T. - Truth Search Tool
+
 
 The main service is powered by Django REST API. Using libraries such as: django-filter, django-cors-headers, psycopg2 (for working with a "clean" PostgreSQL database), mongoengine and pymongo (for working with a "dirty" / "raw" MongoDB database). For parsing Twitter, Twitter API v1 and the Tweepy library are used.
 
