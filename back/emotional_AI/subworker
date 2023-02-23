@@ -1,0 +1,45 @@
+#FROM nvidia/cuda:11.0-cudnn8-runtime-ubuntu18.04
+FROM python:3.8-slim
+
+RUN mkdir /models_bucket
+RUN chmod +7777 /models_bucket
+RUN apt-get update && apt-get -y install -y procps
+RUN pip install --no-cache-dir torch==1.8.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+RUN pip install protobuf==3.19.0
+#set up environment
+RUN apt-get update && apt-get -y install build-essential
+RUN pip install --no-cache-dir "uvicorn[standard]" gunicorn fastapi
+COPY ./subworker_req.txt /requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt
+
+
+
+# Copy source code to container
+COPY ModelsOperator /app/ModelsOperator
+COPY subworker.py /app/app.py
+COPY id2topic_sens.json /id2topic_sens.json 
+ENV PYTHONPATH=/app
+EXPOSE 80
+
+# set model name from docker build --build-arg <varname>=<value>
+ENV DET_EMOTION_MODEL="sismetanin/xlm_roberta_large-ru-sentiment-rusentiment"
+# ENV DET_EMOTION_MODEL="sismetanin/sbert-ru-sentiment-sentirueval2016"
+ENV MODELNAME=""
+ENV DET_TOPICS_MODEL="Skoltech/russian-sensitive-topics"
+ENV DET_APPROP_MODEL="Skoltech/russian-inappropriate-messages"
+
+COPY model_loader.sh /entry.sh
+RUN chmod +x /entry.sh
+
+# Create cache folders
+WORKDIR /app
+RUN mkdir /cache
+RUN mkdir /cache/transformers
+RUN mkdir /cache/torch
+
+ENV TRANSFORMERS_CACHE=/cache/transformers
+ENV TORCH_CACHE=/cache/torch
+RUN chmod +7777 /models_bucket
+
+# Start the app
+ENTRYPOINT ["/entry.sh"]

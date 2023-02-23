@@ -1,0 +1,29 @@
+#FROM nvidia/cuda:11.0-cudnn8-runtime-ubuntu18.04
+FROM python:3.8-slim
+
+RUN apt-get update && apt-get -y install -y procps
+RUN pip install protobuf
+#set up environment
+RUN apt-get update && apt-get -y install build-essential
+RUN pip install --no-cache-dir "uvicorn[standard]" gunicorn fastapi
+COPY ./app_req.txt /requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt
+
+
+
+# Copy source code to container
+COPY app.py /app/app.py
+COPY id2topic_sens.json /id2topic_sens.json 
+ENV PYTHONPATH=/app
+EXPOSE 80
+
+# set model names and launch model loader
+ENV DET_EMOTION_MODEL="sismetanin/sbert-ru-sentiment-sentirueval2016"
+ENV DET_TOPICS_MODEL="Skoltech/russian-sensitive-topics"
+ENV DET_APPROP_MODEL="Skoltech/russian-inappropriate-messages"
+
+# Create cache folders
+WORKDIR /app
+
+# Start the app
+CMD ["gunicorn", "app:app", "-b", "0.0.0.0:80", "--workers", "1", "--log-level", "info", "--access-logfile", "-", "--timeout", "20", "--keep-alive", "3", "-k", "uvicorn.workers.UvicornWorker"]
