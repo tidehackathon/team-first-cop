@@ -9,6 +9,8 @@ Tweepy is an open source Python package that gives you a very convenient way to 
 
 MongoEngine is a Python library that acts as an Object Document Mapper with MongoDB, a NOSQL database. It is similar to SQLAlchemy, which is the Object Relation Mapper (ORM) for SQL based databases.
 
+
+#The main functionality
 • 1) Pariser of news resources (news sites, telegram channels, tweeter, radish, etc.)-is a modular system, each new parser is connected as a module.
 
 • 2) administrator panel \ operator
