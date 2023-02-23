@@ -22,7 +22,7 @@ II) administrator panel \ operator
     Search by Entity and text
     Classify sources
 
-II) Analysts tool (neurons and their symbiosis):
+III) Analysts tool (neurons and their symbiosis):
   1. Language recognition (definition of which language in the news)
   2. Determination of entities in the news (who \ what)
   3. Definition of the context in relation to the essence (which does, as characterized, etc.)
